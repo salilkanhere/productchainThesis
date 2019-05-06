@@ -1,0 +1,111 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+ 
+/**
+ * My commodity trading network
+ */
+namespace org.example.productchain
+
+
+/**
+ * The type of perishable product being shipped
+ */
+enum ProductType {
+  o MEAT
+  o MILK
+}
+
+/**
+ * The type of perishable product being shipped
+ */
+enum HACCPViolation {
+  o HIGH_TEMP
+  o LOW_TEMP
+}
+
+/**
+ * An abstract transaction that is related to a batch
+ */
+abstract transaction BatchTransaction {
+  --> Batch batch
+}
+
+/**
+ * An temperature reading for a batch. E.g. received from a
+ * device within a temperature controlled shipping container
+ */
+transaction TemperatureReading extends BatchTransaction {
+  o Double centigrade
+}
+
+/**
+ * The current owner of the batch gets updated
+ */
+transaction TransferBatch extends BatchTransaction {
+  o String newOwner
+}
+
+
+/**
+ * A new batch gets created
+ */
+transaction CreateBatch {
+  o String batchID
+  o String creator
+  o String currentOwner
+  o ProductType type
+  --> HACCP haccp
+  --> Batch[] constituents optional
+}
+
+/**
+ * A new batch gets created
+ */
+transaction CreateHACCP {
+  o String haccpId
+  o ProductType type
+  o Double minTemperature
+  o Double maxTemperature
+}
+
+
+/**
+ * The batch of a product. Can be made from other batches of
+ * other products.
+ */
+asset Batch identified by batchId {
+  o String batchId
+  o String creator
+  o String currentOwner
+  o ProductType type
+  --> HACCP haccp
+  --> Batch[] constituents optional
+  o TemperatureReading[] temperatureReadings optional
+  o HACCPViolation[] haccpViolations optional
+}
+
+/**
+ * Defines a contract for HACCP checks
+ */
+asset HACCP identified by haccpId {
+  o String haccpId
+  o Double minTemperature
+  o Double maxTemperature
+}
+

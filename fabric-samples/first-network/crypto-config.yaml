@@ -17,6 +17,10 @@ OrdererOrgs:
     # ---------------------------------------------------------------------------
     Specs:
       - Hostname: orderer
+      - Hostname: orderer2
+      - Hostname: orderer3
+      - Hostname: orderer4
+      - Hostname: orderer5
 # ---------------------------------------------------------------------------
 # "PeerOrgs" - Definition of organizations managing peer nodes
 # ---------------------------------------------------------------------------
@@ -30,7 +34,7 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
-    # Uncomment this section to enable the explicit definition of hosts in your
+    # Uncomment this section totool will create certificates for all five of these orderers, unless the Raft or Kafka ordering services are being used, only one of these orderers will be used in a Solo ordering service implementation and be used to create the system channel and mychannel. enable the explicit definition of hosts in your
     # configuration.  Most users will want to use Template, below
     #
     # Specs is an array of Spec entries.  Each Spec entry consists of two fields:

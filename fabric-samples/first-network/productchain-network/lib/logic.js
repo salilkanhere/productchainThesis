@@ -102,7 +102,7 @@ async function createHACCP(createHACCP) {
     const NS = 'org.example.productchain';
     const haccp = factory.newResource(NS, 'HACCP', createHACCP.haccpId);
     haccp.minTemperature = createHACCP.minTemperature;
-    haccp.maxTemperature = createHACCP.minTemperature;
+    haccp.maxTemperature = createHACCP.maxTemperature;
 
     // add the haccp
     const haccpRegistry = await getAssetRegistry(NS + '.HACCP');

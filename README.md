@@ -16,10 +16,15 @@ More information on the configuration can be found within the connection file:
 In order to startup the network, follow the following steps:
 
 1. Start up the underlying Fabric configuration:
-*cd fabric-samples/first-network*
-*./byfn.sh generate*
-*./byfn.sh -m up -s couchdb -a {-o kafka}*
+
+      *cd fabric-samples/first-network*
+  
+      *./byfn.sh generate*
+  
+      *./byfn.sh -m up -s couchdb -a {-o kafka}*
 
 2. Start up the Composer Network (Insert certificates into connection.json file, create and import cards, compile the busness archive file, install and start the network, ping network to confirm success of the startup sequence)
-*cd connection*
-*./startup.sh*
+
+      *cd connection*
+  
+      *./startup.sh*

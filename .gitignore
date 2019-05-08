@@ -1,0 +1,7 @@
+
+
+##### CERTS AND CARDS #####
+*.pem
+*.card
+*.txt
+*_sk

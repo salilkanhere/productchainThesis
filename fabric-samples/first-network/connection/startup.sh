@@ -7,6 +7,8 @@ cp ../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.
 cp ../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/A* .
 
 composer archive create -t dir -n ../productchain-network/
+cp ../productchain-network/productchain-network@0.0.1.bna .
+
 
 composer card create -p connection.json -u PeerAdmin -c *pem -k *_sk -r PeerAdmin -r ChannelAdmin
 

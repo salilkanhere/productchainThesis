@@ -24,7 +24,7 @@
  * @param {org.example.productchain.TemperatureReading} temperatureReading - the TemperatureReading transaction
  * @transaction
  */
-async function temperacontracttureReading(temperatureReading) {  // eslint-disable-line no-unused-vars
+async function temperatureReading(temperatureReading) {  // eslint-disable-line no-unused-vars
 
     const batch = temperatureReading.batch;
 

@@ -5,3 +5,8 @@
 *.card
 *.txt
 *_sk
+
+
+fabric-samples/first-network/connection/connection.json
+fabric-samples/first-network/connection/productchain-network@0.0.1.bna
+

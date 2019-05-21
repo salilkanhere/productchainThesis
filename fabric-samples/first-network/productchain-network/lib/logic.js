@@ -17,6 +17,7 @@
 
 /* global getParticipantRegistry getAssetRegistry getFactory */
 
+var lowest = 0;
 
 /**transaction TemperatureReading extends BatchTransaction {
 
@@ -69,6 +70,16 @@ async function createBatch(createBatch) {
     
     const factory = getFactory();
     const NS = 'org.example.productchain';
+
+    // Hacky way to ensure batch ID is valid
+    if (createBatch.batchID == null) {
+        createBatch.batchID = lowest + 1;
+        lowest += 1;
+    } else if (createBatch.batchID < lowest) {
+        createBatch.batchID = lowest + 1;
+        lowest += 1;
+    }
+
     const batch = factory.newResource(NS, 'Batch', createBatch.batchID);
     batch.creator = createBatch.creator;
     batch.currentOwner = createBatch.currentOwner;
@@ -101,6 +112,7 @@ async function createHACCP(createHACCP) {
     const factory = getFactory();
     const NS = 'org.example.productchain';
     const haccp = factory.newResource(NS, 'HACCP', createHACCP.haccpId);
+    haccp.type = createHACCP.type;
     haccp.minTemperature = createHACCP.minTemperature;
     haccp.maxTemperature = createHACCP.maxTemperature;
 

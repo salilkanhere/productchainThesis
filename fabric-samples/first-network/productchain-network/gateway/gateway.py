@@ -9,7 +9,7 @@ class Gateway():
     headers = {'content-type': 'application/json'}
 
 
-## SUBMIT temperature reading ##
+    ## SUBMIT temperature reading ##
     def tempperature_reading(self):
         json_temp = {
             "$class": "org.example.productchain.TemperatureReading",
@@ -23,8 +23,7 @@ class Gateway():
         print(json.dumps(parsed, indent=4, sort_keys=True))
 
 
-## READ ALL history ##
-
+    ## READ ALL history ##
     def read_history(self):
         resp = requests.get('http://localhost:3000/api/system/historian', headers=headers)
 
@@ -33,7 +32,7 @@ class Gateway():
 
 
 
-## GET all temperature readings for batch 1 ## 
+    ## GET all temperature readings for batch 1 ## 
     def get_temp_read(self):
         json_filter = {"where":{"batch": "resource:org.example.productchain.Batch#1"}}
 
@@ -45,6 +44,7 @@ class Gateway():
 
 
 
+    ## GET batch data by batch ID ## 
     def get_batch_by_id(self, batch_id):
         json_filter = {"where":{"batchId": str(batch_id)}}
  
@@ -52,6 +52,9 @@ class Gateway():
         parsed = json.loads(resp.content)
         return parsed
 
+
+
+    ## GET a list of batches that were the source of this batch ## 
     def get_source_batch(self, batch_id):
 
         first = self.get_batch_by_id(batch_id)
@@ -75,5 +78,5 @@ class Gateway():
 
 
 
-gw= Gateway()
-print(json.dumps(gw.get_source_batch(4), indent=4, sort_keys=True))
+gw = Gateway()
+print(json.dumps(gw.get_source_batch(6), indent=4, sort_keys=True))

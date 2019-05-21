@@ -105,6 +105,7 @@ asset Batch identified by batchId {
  */
 asset HACCP identified by haccpId {
   o String haccpId
+  o ProductType type
   o Double minTemperature
   o Double maxTemperature
 }

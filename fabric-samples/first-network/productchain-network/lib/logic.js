@@ -16,7 +16,7 @@
 
 
 /* global getParticipantRegistry getAssetRegistry getFactory */
-
+var lowest = 0;
 
 /**transaction TemperatureReading extends BatchTransaction {
 
@@ -24,7 +24,7 @@
  * @param {org.example.productchain.TemperatureReading} temperatureReading - the TemperatureReading transaction
  * @transaction
  */
-async function temperacontracttureReading(temperatureReading) {  // eslint-disable-line no-unused-vars
+async function temperaureReading(temperatureReading) {  // eslint-disable-line no-unused-vars
 
     const batch = temperatureReading.batch;
 
@@ -69,8 +69,12 @@ async function createBatch(createBatch) {
     
     const factory = getFactory();
     const NS = 'org.example.productchain';
+
+    if (createBatch.batchID == '') {
+        createBatch.batchID = Math.floor((Math.random() * 1000) + 1).toString(10);
+    }
+
     const batch = factory.newResource(NS, 'Batch', createBatch.batchID);
-    batch.creator = createBatch.creator;
     batch.currentOwner = createBatch.currentOwner;
     batch.type = createBatch.type;
 
@@ -101,6 +105,7 @@ async function createHACCP(createHACCP) {
     const factory = getFactory();
     const NS = 'org.example.productchain';
     const haccp = factory.newResource(NS, 'HACCP', createHACCP.haccpId);
+    haccp.type = createHACCP.type;
     haccp.minTemperature = createHACCP.minTemperature;
     haccp.maxTemperature = createHACCP.maxTemperature;
 

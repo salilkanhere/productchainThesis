@@ -67,7 +67,6 @@ transaction TransferBatch extends BatchTransaction {
  */
 transaction CreateBatch {
   o String batchID
-  o String creator
   o String currentOwner
   o ProductType type
   --> HACCP haccp
@@ -91,7 +90,6 @@ transaction CreateHACCP {
  */
 asset Batch identified by batchId {
   o String batchId
-  o String creator
   o String currentOwner
   o ProductType type
   --> HACCP haccp
@@ -105,6 +103,7 @@ asset Batch identified by batchId {
  */
 asset HACCP identified by haccpId {
   o String haccpId
+  o ProductType type
   o Double minTemperature
   o Double maxTemperature
 }

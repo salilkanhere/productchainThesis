@@ -16,7 +16,6 @@
 
 
 /* global getParticipantRegistry getAssetRegistry getFactory */
-var lowest = 0;
 
 /**transaction TemperatureReading extends BatchTransaction {
 
@@ -26,9 +25,14 @@ var lowest = 0;
  */
 async function temperaureReading(temperatureReading) {  // eslint-disable-line no-unused-vars
 
+    const factory = getFactory();
+    const NS = 'org.example.productchain';
     const batch = temperatureReading.batch;
+    const batchRegistry = await getAssetRegistry(NS + '.Batch');
 
-    console.log('Adding temperature ' + temperatureReading.centigrade + ' to batch ' + batch.$identifier);
+    if (!batchRegistry.exists(batch.getIdentifier())) {
+        throw new Error ('Batch ' + constituent.getIdentifier() + ' does not exist');
+    }
 
     // Check if the HACCP has been violated
     var violation = null;
@@ -38,25 +42,14 @@ async function temperaureReading(temperatureReading) {  // eslint-disable-line n
         violation = "HIGH_TEMP";
     }
 
-    // If violation has been detected, add it to the violations list
+    // If violation has been detected, emit TemperatureViolation event
     if (violation != null) {
-        if (batch.haccpViolations) {
-            batch.haccpViolations.push(violation);
-        } else {
-            batch.haccpViolations = [violation];
-        }
+        const temperatureViolationEvent = factory.newEvent(NS, 'TemperatureViolation');
+        temperatureViolationEvent.batch = factory.newRelationship(NS, batch.getType(), batch.getIdentifier());
+        temperatureViolationEvent.temperatureReading = temperatureReading;
+        temperatureViolationEvent.violation = violation;
+        emit(temperatureViolationEvent);
     }
-
-    // Add temperature reading to the full list of temperatures
-    if (batch.temperatureReadings) {
-        batch.temperatureReadings.push(temperatureReading);
-    } else {
-        batch.temperatureReadings = [temperatureReading];
-    }
-
-    // add the temp reading to the shipment
-    const batchRegistry = await getAssetRegistry('org.example.productchain.Batch');
-    await batchRegistry.update(batch);
 
 }
 
@@ -69,9 +62,11 @@ async function createBatch(createBatch) {
     
     const factory = getFactory();
     const NS = 'org.example.productchain';
+    const batchRegistry = await getAssetRegistry(NS + '.Batch');
+    const haccpRegistry = await getAssetRegistry(NS + '.HACCP');
 
-    if (createBatch.batchID == '') {
-        createBatch.batchID = Math.floor((Math.random() * 1000) + 1).toString(10);
+    if (createBatch.batchID == '' || createBatch.batchID == '_') {
+        createBatch.batchID = Math.floor((Math.random() * 10000) + 1).toString(10);
     }
 
     const batch = factory.newResource(NS, 'Batch', createBatch.batchID);
@@ -79,18 +74,26 @@ async function createBatch(createBatch) {
     batch.type = createBatch.type;
 
     // Add contract to batch
-    batch.haccp = factory.newRelationship(NS, createBatch.haccp.getType(), createBatch.haccp.getIdentifier());
+    if (haccpRegistry.exists(batch.type.toString())) {
+        batch.haccp = factory.newRelationship(NS, 'HACCP', batch.type.toString());  
+    } else {
+        throw new Error ('No compatible HACCP of type ' + batch.type.toString());
+    }
+
 
     // In the case that this is a produce transaction
     if (createBatch.constituents) {
         batch.constituents = [];
         createBatch.constituents.forEach(constituent => {
-            batch.constituents.push(factory.newRelationship(NS, constituent.getType(), constituent.getIdentifier()));
+            if (batchRegistry.exists(constituent.getIdentifier())) {
+                batch.constituents.push(factory.newRelationship(NS, constituent.getType(), constituent.getIdentifier()));
+            } else {
+                throw new Error ('Batch ' + constituent.getIdentifier() + ' does not exist - ensure all constituents are in this region');
+            }
         }); 
     };
 
     // add the batch
-    const batchRegistry = await getAssetRegistry(NS + '.Batch');
     await batchRegistry.addAll([batch]);
 
 }
@@ -104,10 +107,16 @@ async function createBatch(createBatch) {
 async function createHACCP(createHACCP) {
     const factory = getFactory();
     const NS = 'org.example.productchain';
-    const haccp = factory.newResource(NS, 'HACCP', createHACCP.haccpId);
-    haccp.type = createHACCP.type;
+
+    if (createHACCP.type == '' || createHACCP.type == '_') {
+        createHACCP.type = Math.floor((Math.random() * 10000) + 1).toString(10);
+    }
+
+    // Since one HACCP exists for each type of product, we can make the unique identifier just the type
+    const haccp = factory.newResource(NS, 'HACCP', createHACCP.type);
     haccp.minTemperature = createHACCP.minTemperature;
     haccp.maxTemperature = createHACCP.maxTemperature;
+    haccp.type = createHACCP.type;
 
     // add the haccp
     const haccpRegistry = await getAssetRegistry(NS + '.HACCP');
@@ -121,17 +130,69 @@ async function createHACCP(createHACCP) {
  * @transaction
  */
 async function transferBatch(transferBatch) {
-    
-    const factory = getFactory();
+
     const NS = 'org.example.productchain';
-
-    transferBatch.batch.currentOwner = transferBatch.newOwner;
-
-    // add the growers
     const batchRegistry = await getAssetRegistry(NS + '.Batch');
-    await batchRegistry.update(transferBatch.batch);
+    const haccpRegistry = await getAssetRegistry(NS + '.HACCP');
+    const currentRegionRegistry = await getAssetRegistry(NS + '.CurrentRegion');
+    const batch = transferBatch.batch;
+    const currRegionPromise = currentRegionRegistry.get('CURR');
+    const currRegion = '';
+    currRegionPromise.then(function(value) {
+        currRegion = value;
+        console.log(value);
+      });
 
+
+    // REGION LOGISTICS
+    // Transfer batch can be done across regions
+    // If the transfer is in the same region
+    //      1. exists = update it
+    //      2. doesnt exist = create new batch
+    // otherwise, only delete if its a different region, but it exists in this one
+    console.log("Curr region " + currRegion.region);
+    console.log("Transfer region " + transferBatch.region);
+    if (currRegion.region == transferBatch.region) {
+        if (batchRegistry.exists(batch.getIdentifier())) {
+
+            batch.currentOwner = transferBatch.newOwner;
+            await batchRegistry.update(batch);
+        
+        } else {
+
+            const newBatch = factory.newResource(NS, 'Batch', batch.getIdentifier());
+            newBatch.currentOwner = batch.currentOwner;
+            newBatch.type = batch.type;
+        
+            // Add contract to batch
+            if (haccpRegistry.exists(batch.type.toString())) {
+                newBatch.haccp = factory.newRelationship(NS, 'HACCP', batch.type.toString());  
+            } else {
+                throw new Error ('No compatible HACCP of type ' + batch.type.toString());
+            }
+
+            await batchRegistry.addAll([batch]);
+            
+        }
+    } else {
+
+        if (batchRegistry.exists(batch.getIdentifier())) {
+            await batchRegistry.remove(batch.getIdentifier());
+        }
+    }
 }
 
 
-
+/**
+ * A transfer of batch ownership
+ * @param {org.example.productchain.Setup} setup
+ * @transaction
+ */
+async function setup(setup) {
+    const factory = getFactory();
+    const NS = 'org.example.productchain';
+    const currentRegion = factory.newResource(NS, 'CurrentRegion', 'CURR');
+    currentRegion.region = setup.region;
+    const regionRegistry = await getAssetRegistry(NS + '.CurrentRegion');
+    await regionRegistry.addAll([currentRegion]);
+}

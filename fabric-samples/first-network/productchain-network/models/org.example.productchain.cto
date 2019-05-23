@@ -39,6 +39,15 @@ enum HACCPViolation {
   o LOW_TEMP
 }
 
+enum Region {
+  o RURAL
+  o URBAN
+}
+
+transaction Setup {
+  o Region region
+}
+
 /**
  * An abstract transaction that is related to a batch
  */
@@ -59,6 +68,7 @@ transaction TemperatureReading extends BatchTransaction {
  */
 transaction TransferBatch extends BatchTransaction {
   o String newOwner
+  o Region region
 }
 
 
@@ -69,7 +79,6 @@ transaction CreateBatch {
   o String batchID
   o String currentOwner
   o ProductType type
-  --> HACCP haccp
   --> Batch[] constituents optional
 }
 
@@ -77,7 +86,6 @@ transaction CreateBatch {
  * A new batch gets created
  */
 transaction CreateHACCP {
-  o String haccpId
   o ProductType type
   o Double minTemperature
   o Double maxTemperature
@@ -94,8 +102,7 @@ asset Batch identified by batchId {
   o ProductType type
   --> HACCP haccp
   --> Batch[] constituents optional
-  o TemperatureReading[] temperatureReadings optional
-  o HACCPViolation[] haccpViolations optional
+
 }
 
 /**
@@ -108,3 +115,20 @@ asset HACCP identified by haccpId {
   o Double maxTemperature
 }
 
+
+/**
+ * Temperature event is emitted when the temperature reading violated the contract
+ */
+event TemperatureViolation {
+  --> Batch batch
+  o TemperatureReading temperatureReading
+  o HACCPViolation violation
+}
+
+/**
+ * Set the region of this network
+ */
+asset CurrentRegion identified by currentRegionId{
+  o String currentRegionId
+  o Region region
+}

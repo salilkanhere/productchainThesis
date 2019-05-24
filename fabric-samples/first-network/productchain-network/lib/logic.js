@@ -267,7 +267,12 @@ async function transferBatch(transferBatch) {
         
         } else {
             console.log("Creating batch");
-            const newBatch = factory.newResource(NS, 'Batch', batch.getIdentifier());
+            var id = batch.getIdentifier();
+            if (id == 'NONEXISTENT') {
+                id = 'NONEXISTENT_' + Math.floor((Math.random() * 10000) + 1).toString(10);
+            }
+
+            const newBatch = factory.newResource(NS, 'Batch', id);
             newBatch.currentOwner = transferBatch.newOwner;
             newBatch.type = transferBatch.type;
         

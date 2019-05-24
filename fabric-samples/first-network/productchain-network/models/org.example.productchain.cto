@@ -29,6 +29,7 @@ namespace org.example.productchain
 enum ProductType {
   o MEAT
   o MILK
+  o TEST
 }
 
 /**
@@ -68,6 +69,7 @@ transaction TemperatureReading extends BatchTransaction {
  */
 transaction TransferBatch extends BatchTransaction {
   o String newOwner
+  o ProductType type
   o Region region
 }
 

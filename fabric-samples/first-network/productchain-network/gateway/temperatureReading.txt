@@ -1,0 +1,5 @@
+{
+  "$class": "org.example.productchain.TemperatureReading",
+  "centigrade": 5,
+  "batch": "resource:org.example.productchain.Batch#1"
+}

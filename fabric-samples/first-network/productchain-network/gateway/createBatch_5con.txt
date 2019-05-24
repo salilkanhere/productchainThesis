@@ -1,0 +1,7 @@
+{
+  "$class": "org.example.productchain.CreateBatch",
+  "batchID": "_",
+  "currentOwner": "CONSTITUENT",
+  "type": "MEAT",
+  "constituents": ["org.example.productchain.Batch#1", "org.example.productchain.Batch#2", "org.example.productchain.Batch#3", "org.example.productchain.Batch#4", "org.example.productchain.Batch#5"]
+}

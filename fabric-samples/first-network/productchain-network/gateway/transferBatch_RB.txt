@@ -1,0 +1,7 @@
+{
+  "$class": "org.example.productchain.TransferBatch",
+  "newOwner": "TEST_2",
+  "type": "MEAT",
+  "region": "RURAL",
+  "batch": "resource:org.example.productchain.Batch#1"
+}

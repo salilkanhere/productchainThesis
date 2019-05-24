@@ -1,0 +1,6 @@
+{
+  "$class": "org.example.productchain.CreateHACCP",
+  "type": "MEAT",
+  "minTemperature": 0,
+  "maxTemperature": 10
+}

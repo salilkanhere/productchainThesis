@@ -1,0 +1,6 @@
+{
+  "$class": "org.example.productchain.CreateBatch",
+  "batchID": "1",
+  "currentOwner": "TEST",
+  "type": "MEAT"
+}

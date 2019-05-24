@@ -1,0 +1,45 @@
+This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient).....done
+
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            3000
+
+Document Path:          /api/TemperatureReading
+Document Length:        206 bytes
+
+Concurrency Level:      1
+Time taken for tests:   44.021 seconds
+Complete requests:      20
+Failed requests:        0
+Total transferred:      11580 bytes
+Total body sent:        5880
+HTML transferred:       4120 bytes
+Requests per second:    0.45 [#/sec] (mean)
+Time per request:       2201.030 [ms] (mean)
+Time per request:       2201.030 [ms] (mean, across all concurrent requests)
+Transfer rate:          0.26 [Kbytes/sec] received
+                        0.13 kb/s sent
+                        0.39 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       0
+Processing:  2148 2201  44.3   2190    2312
+Waiting:     2148 2201  44.3   2190    2311
+Total:       2149 2201  44.3   2190    2312
+
+Percentage of the requests served within a certain time (ms)
+  50%   2190
+  66%   2207
+  75%   2228
+  80%   2250
+  90%   2290
+  95%   2312
+  98%   2312
+  99%   2312
+ 100%   2312 (longest request)

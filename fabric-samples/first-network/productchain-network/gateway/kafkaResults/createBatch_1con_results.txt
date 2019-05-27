@@ -10,36 +10,36 @@ Server Hostname:        localhost
 Server Port:            3000
 
 Document Path:          /api/CreateBatch
-Document Length:        276 bytes
+Document Length:        241 bytes
 
 Concurrency Level:      1
-Time taken for tests:   109.545 seconds
+Time taken for tests:   109.203 seconds
 Complete requests:      50
 Failed requests:        0
-Total transferred:      32500 bytes
-Total body sent:        18300
-HTML transferred:       13800 bytes
+Total transferred:      30700 bytes
+Total body sent:        16500
+HTML transferred:       12050 bytes
 Requests per second:    0.46 [#/sec] (mean)
-Time per request:       2190.904 [ms] (mean)
-Time per request:       2190.904 [ms] (mean, across all concurrent requests)
-Transfer rate:          0.29 [Kbytes/sec] received
-                        0.16 kb/s sent
-                        0.45 kb/s total
+Time per request:       2184.057 [ms] (mean)
+Time per request:       2184.057 [ms] (mean, across all concurrent requests)
+Transfer rate:          0.27 [Kbytes/sec] received
+                        0.15 kb/s sent
+                        0.42 kb/s total
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:  2162 2191  17.1   2188    2238
-Waiting:     2162 2191  17.1   2188    2238
-Total:       2162 2191  17.1   2189    2238
+Processing:  2156 2184  24.2   2178    2281
+Waiting:     2156 2184  24.1   2177    2281
+Total:       2156 2184  24.2   2178    2281
 
 Percentage of the requests served within a certain time (ms)
-  50%   2189
-  66%   2193
-  75%   2196
-  80%   2202
+  50%   2178
+  66%   2183
+  75%   2193
+  80%   2198
   90%   2217
-  95%   2236
-  98%   2238
-  99%   2238
- 100%   2238 (longest request)
+  95%   2241
+  98%   2281
+  99%   2281
+ 100%   2281 (longest request)

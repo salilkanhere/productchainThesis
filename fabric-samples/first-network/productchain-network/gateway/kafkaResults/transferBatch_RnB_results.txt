@@ -13,15 +13,15 @@ Document Path:          /api/TransferBatch
 Document Length:        247 bytes
 
 Concurrency Level:      1
-Time taken for tests:   109.258 seconds
+Time taken for tests:   109.176 seconds
 Complete requests:      50
 Failed requests:        0
 Total transferred:      31000 bytes
 Total body sent:        16900
 HTML transferred:       12350 bytes
 Requests per second:    0.46 [#/sec] (mean)
-Time per request:       2185.152 [ms] (mean)
-Time per request:       2185.152 [ms] (mean, across all concurrent requests)
+Time per request:       2183.524 [ms] (mean)
+Time per request:       2183.524 [ms] (mean, across all concurrent requests)
 Transfer rate:          0.28 [Kbytes/sec] received
                         0.15 kb/s sent
                         0.43 kb/s total
@@ -29,17 +29,17 @@ Transfer rate:          0.28 [Kbytes/sec] received
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:  2149 2185  19.5   2182    2239
-Waiting:     2149 2185  19.5   2182    2239
-Total:       2149 2185  19.5   2182    2240
+Processing:  2156 2183  15.9   2183    2228
+Waiting:     2156 2183  15.9   2183    2228
+Total:       2156 2183  15.9   2183    2228
 
 Percentage of the requests served within a certain time (ms)
-  50%   2182
-  66%   2191
-  75%   2197
-  80%   2199
-  90%   2213
-  95%   2229
-  98%   2240
-  99%   2240
- 100%   2240 (longest request)
+  50%   2183
+  66%   2187
+  75%   2191
+  80%   2195
+  90%   2201
+  95%   2225
+  98%   2228
+  99%   2228
+ 100%   2228 (longest request)

@@ -13,15 +13,15 @@ Document Path:          /api/TemperatureReading
 Document Length:        206 bytes
 
 Concurrency Level:      1
-Time taken for tests:   108.354 seconds
+Time taken for tests:   108.406 seconds
 Complete requests:      50
 Failed requests:        0
 Total transferred:      28950 bytes
 Total body sent:        14700
 HTML transferred:       10300 bytes
 Requests per second:    0.46 [#/sec] (mean)
-Time per request:       2167.077 [ms] (mean)
-Time per request:       2167.077 [ms] (mean, across all concurrent requests)
+Time per request:       2168.116 [ms] (mean)
+Time per request:       2168.116 [ms] (mean, across all concurrent requests)
 Transfer rate:          0.26 [Kbytes/sec] received
                         0.13 kb/s sent
                         0.39 kb/s total
@@ -29,17 +29,17 @@ Transfer rate:          0.26 [Kbytes/sec] received
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:  2143 2167  17.3   2165    2261
-Waiting:     2143 2167  17.2   2165    2261
-Total:       2143 2167  17.3   2165    2261
+Processing:  2146 2168  24.0   2161    2300
+Waiting:     2146 2168  24.0   2161    2300
+Total:       2146 2168  24.0   2161    2300
 
 Percentage of the requests served within a certain time (ms)
-  50%   2165
+  50%   2161
   66%   2168
-  75%   2173
-  80%   2176
-  90%   2181
-  95%   2185
-  98%   2261
-  99%   2261
- 100%   2261 (longest request)
+  75%   2174
+  80%   2177
+  90%   2190
+  95%   2207
+  98%   2300
+  99%   2300
+ 100%   2300 (longest request)

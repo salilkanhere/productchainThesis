@@ -13,15 +13,15 @@ Document Path:          /api/CreateHACCP
 Document Length:        185 bytes
 
 Concurrency Level:      1
-Time taken for tests:   108.752 seconds
+Time taken for tests:   108.519 seconds
 Complete requests:      50
 Failed requests:        0
 Total transferred:      27900 bytes
 Total body sent:        13500
 HTML transferred:       9250 bytes
 Requests per second:    0.46 [#/sec] (mean)
-Time per request:       2175.041 [ms] (mean)
-Time per request:       2175.041 [ms] (mean, across all concurrent requests)
+Time per request:       2170.380 [ms] (mean)
+Time per request:       2170.380 [ms] (mean, across all concurrent requests)
 Transfer rate:          0.25 [Kbytes/sec] received
                         0.12 kb/s sent
                         0.37 kb/s total
@@ -29,17 +29,17 @@ Transfer rate:          0.25 [Kbytes/sec] received
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:  2135 2175  40.0   2167    2396
-Waiting:     2135 2175  40.0   2167    2396
-Total:       2135 2175  40.0   2167    2396
+Processing:  2140 2170  21.7   2167    2270
+Waiting:     2140 2170  21.7   2167    2270
+Total:       2140 2170  21.7   2167    2270
 
 Percentage of the requests served within a certain time (ms)
   50%   2167
-  66%   2171
+  66%   2172
   75%   2176
   80%   2180
-  90%   2199
-  95%   2224
-  98%   2396
-  99%   2396
- 100%   2396 (longest request)
+  90%   2189
+  95%   2211
+  98%   2270
+  99%   2270
+ 100%   2270 (longest request)

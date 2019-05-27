@@ -9,19 +9,19 @@ Server Software:
 Server Hostname:        localhost
 Server Port:            3000
 
-Document Path:          /api/CreateHACCP
-Document Length:        185 bytes
+Document Path:          /api/CreateBatch
+Document Length:        182 bytes
 
 Concurrency Level:      1
-Time taken for tests:   108.752 seconds
+Time taken for tests:   108.410 seconds
 Complete requests:      50
 Failed requests:        0
-Total transferred:      27900 bytes
-Total body sent:        13500
-HTML transferred:       9250 bytes
+Total transferred:      27750 bytes
+Total body sent:        13350
+HTML transferred:       9100 bytes
 Requests per second:    0.46 [#/sec] (mean)
-Time per request:       2175.041 [ms] (mean)
-Time per request:       2175.041 [ms] (mean, across all concurrent requests)
+Time per request:       2168.196 [ms] (mean)
+Time per request:       2168.196 [ms] (mean, across all concurrent requests)
 Transfer rate:          0.25 [Kbytes/sec] received
                         0.12 kb/s sent
                         0.37 kb/s total
@@ -29,17 +29,17 @@ Transfer rate:          0.25 [Kbytes/sec] received
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:  2135 2175  40.0   2167    2396
-Waiting:     2135 2175  40.0   2167    2396
-Total:       2135 2175  40.0   2167    2396
+Processing:  2142 2168  15.0   2168    2230
+Waiting:     2142 2168  15.0   2168    2230
+Total:       2142 2168  15.0   2168    2230
 
 Percentage of the requests served within a certain time (ms)
-  50%   2167
-  66%   2171
-  75%   2176
+  50%   2168
+  66%   2173
+  75%   2177
   80%   2180
-  90%   2199
-  95%   2224
-  98%   2396
-  99%   2396
- 100%   2396 (longest request)
+  90%   2183
+  95%   2192
+  98%   2230
+  99%   2230
+ 100%   2230 (longest request)

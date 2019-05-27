@@ -10,7 +10,7 @@ class Gateway():
 
 
     ## SUBMIT temperature reading ##
-    def tempperature_reading(self):
+    def temperature_reading(self):
         json_temp = {
             "$class": "org.example.productchain.TemperatureReading",
             "centigrade": 12,
@@ -77,6 +77,63 @@ class Gateway():
         return roots
 
 
+    ## GET batch data by batch ID ## 
+    def get_transfers(self, batch_id):
+        json_filter = {"where":{"batch": "resource:org.example.productchain.Batch#" + str(batch_id)}}
+ 
+        resp = requests.get('http://localhost:3000/api/TransferBatch?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        parsed = json.loads(resp.content)
+        return parsed
+
+
+    ## GET batch data by batch ID ## 
+    def get_create(self, batch_id):
+        json_filter = {"where":{"batchID": str(batch_id)}}
+ 
+        resp = requests.get('http://localhost:3000/api/CreateBatch?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        parsed = json.loads(resp.content)
+        return parsed
+
+
+
+    def get_product_story(self, batch_id):
+
+        story = []
+        transfers = self.get_transfers(batch_id)
+        create = self.get_create(batch_id)
+
+        story.extend(transfers)
+        story.extend(create)
+        queue = [create]
+
+        while len(queue) > 0:
+            curr = queue.pop(0)
+
+            for a in curr:
+            
+                if 'constituents' in a:
+                    for i in a['constituents']:
+
+                        transfers = self.get_transfers(i[-1])
+                        create = self.get_create(i[-1])
+
+                        story.extend(transfers)
+                        story.extend(create)
+
+                        queue.append(create)
+
+
+        story.sort(key=self.extract_time, reverse=True)
+        return story
+
+
+    def extract_time(self, json):
+        try:
+            numberjson = filter(lambda x: x.isdigit(), json['timestamp'])
+            return int(numberjson)
+        except KeyError:
+            return 0
+
 
 gw = Gateway()
-print(json.dumps(gw.get_source_batch(6), indent=4, sort_keys=True))
+print(json.dumps(gw.get_product_story(5), indent=4, sort_keys=True))

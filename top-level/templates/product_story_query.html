@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="home">
+    <p>
+        {{ form.batch_id.label }}<br>
+        {{ form.batch_id(size=32) }}
+    </p>
+    <p>{{ form.submit() }}</p>
+  </div>
+{% endblock %}

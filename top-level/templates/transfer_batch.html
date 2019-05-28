@@ -21,6 +21,12 @@
                 {{ form.product_type(size=32) }}
             </p>
             <p>{{ form.submit() }}</p>
-        </form>
+        </form>     
+        {% if response %}
+            <div class="response">
+            <h1>Response</h1>
+            <p>{{ response }}</p>
+            </div>
+        {% endif %}
   </div>
 {% endblock %}

@@ -10,22 +10,42 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/create_batch/')
+@app.route('/create_batch/', methods=['GET', 'POST'])
 def create_batch():
+    response = ''
     form = CreateForm()
-    return render_template('create_batch.html', title='Create Batch', form=form)
+    print form.validate_on_submit()
+    if form.validate_on_submit():
+        response = "Hello"
+    else:
+        response = "Please fill in all fields"
+
+    print(response)
+    return render_template('create_batch.html', title='Create Batch', form=form, response=response)
 
 
-@app.route('/transfer_batch/')
+@app.route('/transfer_batch/', methods=['GET', 'POST'])
 def transfer_batch():
+    response = ''
     form = TransferForm()
-    return render_template('transfer_batch.html', title='Transfer Batch', form=form)
+    if form.validate_on_submit():
+        response = "Hello"
+    else:
+        response = "Please fill in all fields"
+        
+    return render_template('transfer_batch.html', title='Transfer Batch', form=form, response=response)
 
 
-@app.route('/product_story_query/')
+@app.route('/product_story_query/', methods=['GET', 'POST'])
 def product_story_query():
+    response = ''
     form = StoryQueryForm()
-    return render_template('product_story_query.html', title='Query Batch', form=form)
+    if form.validate_on_submit():
+        response = "Hello"
+    else:
+        response = "Please fill in all fields"
+
+    return render_template('product_story_query.html', title='Query Batch', form=form, response=response)
 
 if __name__ == '__main__':
     app.run(debug=True)

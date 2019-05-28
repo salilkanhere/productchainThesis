@@ -25,9 +25,15 @@ header h1.logo:hover {
   color: #fff;
   text-decoration: none;
 }
+
 /*
  * Centering the body content
  */
+
+div.response {
+  padding-top: 40px;
+}
+
 .container {
   width: 1200px;
   margin: 0 auto;

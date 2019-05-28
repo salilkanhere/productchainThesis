@@ -1,10 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
   <div class="home">
-    <p>
-        {{ form.batch_id.label }}<br>
-        {{ form.batch_id(size=32) }}
-    </p>
-    <p>{{ form.submit() }}</p>
+        <h1>Transfer Batch</h1>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.batch_id.label }}<br>
+                {{ form.batch_id(size=32) }}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>     
+        {% if response %}
+            <div class="response">
+            <h1>Response</h1>
+            <p>{{ response }}</p>
+            </div>
+        {% endif %}
+
   </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from config import Config
 from forms import CreateForm, TransferForm, StoryQueryForm
+from utils import CreateBatch, TransferBatch, QueryBatch
 
 app = Flask(__name__)
 app.config.from_object(Config)

@@ -24,13 +24,8 @@ class Setup():
         resp_rural = requests.post('http://'+ RURAL + '/api/Setup', json.dumps(server_rural), headers=self.headers)
         resp_urban = requests.post('http://'+ URBAN + '/api/Setup', json.dumps(server_urban), headers=self.headers)
 
-        parsed_rural = json.loads(resp_rural.content)
-        parsed_urban = json.loads(resp_urban.content)
 
-        print(json.dumps(parsed_rural, indent=4, sort_keys=True))
-        print(json.dumps(parsed_urban, indent=4, sort_keys=True))
-
-        return json.dumps(parsed_rural, indent=4, sort_keys=True)
+        return (resp_rural.status_code == 200 and resp_urban.status_code == 200)
 
 
 class CreateHACCP():
@@ -50,17 +45,7 @@ class CreateHACCP():
         resp_rural = requests.post('http://'+ RURAL + '/api/CreateHACCP', json.dumps(json_data), headers=self.headers)
         resp_urban = requests.post('http://'+ URBAN + '/api/CreateHACCP', json.dumps(json_data), headers=self.headers)
 
-        result = str(json.loads(resp_rural.content)) + str(json.loads(resp_urban.content))
-        if resp_rural.status_code != 200 and resp_urban.status_code != 200:
-            result = "ERROR FROM BOTH SERVERS: " + parsed_rural["error"]["message"] 
-            result += parsed_urban["error"]["message"]
-        elif resp_rural.status_code != 200:
-            result = parsed_urban
-        elif resp_urban.status_code != 200:
-            result = parsed_rural
-
-        print(json.dumps(result, indent=4, sort_keys=True))
-        return result
+        return (resp_rural.status_code == 200 and resp_urban.status_code == 200)
 
 
 class CreateBatch():
@@ -88,15 +73,10 @@ class CreateBatch():
 
         if str(region) == 'Rural':
             response = requests.post('http://'+ RURAL + '/api/CreateBatch', json.dumps(json_data), headers=self.headers)
-        else:
+        elif str(region) == 'Urban':
             response = requests.post('http://'+ URBAN + '/api/CreateBatch', json.dumps(json_data), headers=self.headers)
 
-        result = json.loads(response.content)
-        if response.status_code != 200:
-            result = "ERROR: " + result["error"]["message"]
-
-        print(json.dumps(result, indent=4, sort_keys=True))
-        return result
+        return (response.status_code == 200)
 
 
 
@@ -119,22 +99,7 @@ class TransferBatch():
         resp_rural = requests.post('http://'+ RURAL + '/api/TransferBatch', json.dumps(json_data), headers=self.headers)
         resp_urban = requests.post('http://'+ URBAN + '/api/TransferBatch', json.dumps(json_data), headers=self.headers)
 
-        
-        parsed_rural = json.loads(resp_rural.content)
-        parsed_urban = json.loads(resp_urban.content)
-
-        if resp_rural.status_code != 200 and resp_urban.status_code != 200:
-            result = "ERROR FROM BOTH SERVERS: " + parsed_rural["error"]["message"] 
-            result += parsed_urban["error"]["message"]
-        elif resp_rural.status_code != 200:
-            result = parsed_urban
-        else:
-            result = parsed_rural
-
-        print(json.dumps(parsed_rural, indent=4, sort_keys=True))
-        print(json.dumps(parsed_urban, indent=4, sort_keys=True))
-
-        return result
+        return (resp_rural.status_code == 200 or server_urban.status_code == 200)
 
 
 
@@ -169,8 +134,7 @@ class QueryBatch():
                         queue.append(create)
 
 
-        story.sort(key=self.extract_time, reverse=True)
-        return json.dumps(story, indent=4, sort_keys=True)
+        return self.format_story(story)
 
 
 
@@ -193,10 +157,6 @@ class QueryBatch():
             result = parsed_urban
         else:
             result = []
-
-        #print(json.dumps(parsed_rural, indent=4, sort_keys=True))
-        #print(json.dumps(parsed_urban, indent=4, sort_keys=True))
-        print(result)
         
         return result
 
@@ -223,10 +183,6 @@ class QueryBatch():
         else:
             result = []
 
-        #print(json.dumps(parsed_rural, indent=4, sort_keys=True))
-        #print(json.dumps(parsed_urban, indent=4, sort_keys=True))
-        print(result)
-
         return result
 
 
@@ -236,3 +192,45 @@ class QueryBatch():
             return int(numberjson)
         except KeyError:
             return 0
+
+
+    def format_story(self, story):
+
+        story.sort(key=self.extract_time, reverse=True)
+        final = []
+
+        for curr in story:
+
+            transaction_type = curr["$class"].split('.')[3]
+            transaction_id = curr["transactionId"]
+            date = curr["timestamp"][:10]
+            time = curr["timestamp"][12:19]
+            batch = ""
+            constituents = []
+            owner = ""
+
+            if transaction_type == "TransferBatch":
+                batch = curr["batch"].split('#')[1]
+                constituents = 0
+                owner = curr["newOwner"]
+            elif transaction_type == "CreateBatch":
+                batch = curr["batchID"]
+                for val in curr["constituents"]:
+                    constituents.append(val[-1])
+                owner = curr["currentOwner"]
+
+
+
+            obj = {
+                "transaction_type" : transaction_type,
+                "date" : date,
+                "time" : time,
+                "batch" : batch,
+                "owner" : owner,
+                "constituents" : constituents,
+                "transaction_id": transaction_id
+            }
+
+            final.append(obj)
+
+        return final

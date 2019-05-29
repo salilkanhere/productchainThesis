@@ -45,6 +45,11 @@ div.home {
      -moz-border-radius: 6px;
           border-radius: 6px;
 }
+div.transaction {
+  background: white;
+  padding: 20px;
+  margin: 20px;
+}
 h2 {
   font-size: 3em;
   margin-top: 40px;
@@ -54,7 +59,7 @@ h2 {
 h3 {
   font-size: 1.7em;
   font-weight: 100;
-  margin-top: 30px;
+  margin-top: 10px !important;
   text-align: center;
   letter-spacing: -1px;
   color: #999;
@@ -72,4 +77,12 @@ h3 {
 .menu li a {
   color: #444;
   text-decoration: none;
+}
+div.transaction_heading {
+  text-align: right !important;
+  display: inline !important;
+}
+div.transaction_time {
+  text-align: left;
+  display: inline;
 }

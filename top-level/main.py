@@ -12,7 +12,9 @@ app.setup_status = 0
 def home():
     if not app.setup_status:
         setup = Setup()
-        setup.init()
+        setup_result = setup.init()
+        if not setup_result:
+            print("ERROR: during setup")
         app.setup_status = 1
     
     return render_template('home.html', title='ProductChain')
@@ -64,14 +66,15 @@ def transfer_batch():
 @app.route('/product_story_query/', methods=['GET', 'POST'])
 def product_story_query():
     response = ''
+    warn = ''
     form = StoryQueryForm()
     if form.validate_on_submit():
         queryBatch = QueryBatch()
         response = queryBatch.query(form.batch_id.data)
     else:
-        response = "Please fill in all fields"
+        warn = "Please fill in all fields"
 
-    return render_template('product_story_query.html', title='Query Batch', form=form, response=response)
+    return render_template('product_story_query.html', title='Query Batch', form=form, response=response, warn=warn)
 
 if __name__ == '__main__':
     app.run(debug=True)

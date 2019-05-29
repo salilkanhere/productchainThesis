@@ -1,13 +1,15 @@
 from flask import Flask, render_template
 from config import Config
 from forms import CreateForm, TransferForm, StoryQueryForm
-from utils import CreateBatch, TransferBatch, QueryBatch
+from utils import Setup, CreateBatch, TransferBatch, QueryBatch
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 @app.route('/')
 def home():
+    setup = Setup()
+    setup.init()
     return render_template('home.html')
 
 
@@ -15,13 +17,13 @@ def home():
 def create_batch():
     response = ''
     form = CreateForm()
+
     print form.validate_on_submit()
     if form.validate_on_submit():
         response = "Hello"
     else:
         response = "Please fill in all fields"
 
-    print(response)
     return render_template('create_batch.html', title='Create Batch', form=form, response=response)
 
 

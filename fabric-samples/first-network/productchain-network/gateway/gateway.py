@@ -8,6 +8,29 @@ class Gateway():
 
     headers = {'content-type': 'application/json'}
 
+    def create_batch(self, batch_id):
+        json_data = {
+            "$class": "org.example.productchain.TransferBatch",
+            "batch": "resource:org.example.productchain.Batch#" + str(batch_id),
+            "newOwner": "aa",
+            "type": 'MEAT',
+            "region": "URBAN"
+        }
+
+        resp_rural = requests.post('http://localhost:3000/api/TransferBatch', json.dumps(json_data), headers=self.headers)
+        print("STATUS CODE:" + str(resp_rural.status_code))
+        
+        if resp_rural.status_code != 200:
+            parsed = json.loads(resp_rural.content)
+            print("ERROR: " + parsed["error"]["message"])
+            for x in parsed:
+                print(x)
+
+        parsed = json.loads(resp_rural.content)
+        print(json.dumps(parsed, indent=4, sort_keys=True))
+        
+        return parsed
+
 
     ## SUBMIT temperature reading ##
     def temperature_reading(self):
@@ -136,4 +159,4 @@ class Gateway():
 
 
 gw = Gateway()
-print(json.dumps(gw.get_product_story(5), indent=4, sort_keys=True))
+print(json.dumps(gw.create_batch(4), indent=4, sort_keys=True))

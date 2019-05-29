@@ -33,6 +33,36 @@ class Setup():
         return json.dumps(parsed_rural, indent=4, sort_keys=True)
 
 
+class CreateHACCP():
+
+    headers = {'content-type': 'application/json'}
+
+    def create(self, product_type, min_temperature, max_temperature):
+
+
+        json_data = {
+            "$class": "org.example.productchain.CreateHACCP",
+            "type": str(product_type).upper(),
+            "minTemperature": int(min_temperature),
+            "maxTemperature": int(max_temperature)
+        }
+
+        resp_rural = requests.post('http://'+ RURAL + '/api/CreateHACCP', json.dumps(json_data), headers=self.headers)
+        resp_urban = requests.post('http://'+ URBAN + '/api/CreateHACCP', json.dumps(json_data), headers=self.headers)
+
+        result = str(json.loads(resp_rural.content)) + str(json.loads(resp_urban.content))
+        if resp_rural.status_code != 200 and resp_urban.status_code != 200:
+            result = "ERROR FROM BOTH SERVERS: " + parsed_rural["error"]["message"] 
+            result += parsed_urban["error"]["message"]
+        elif resp_rural.status_code != 200:
+            result = parsed_urban
+        elif resp_urban.status_code != 200:
+            result = parsed_rural
+
+        print(json.dumps(result, indent=4, sort_keys=True))
+        return result
+
+
 class CreateBatch():
 
     headers = {'content-type': 'application/json'}
@@ -40,24 +70,26 @@ class CreateBatch():
     def create(self, batch_id, owner, product_type, region, constituents):
 
         json_constituents = []
-        constituents = constituents.split(' ')
-        for curr in constituents:
-            json_constituents.append("org.example.productchain.Batch#" + str(curr))
+        
+        if len(constituents) > 0:
+            constituents = constituents.split(' ')
+            print("Constituents " + str(constituents))
+
+            for curr in constituents:
+                json_constituents.append("org.example.productchain.Batch#" + str(curr))
 
         json_data = {
             "$class": "org.example.productchain.CreateBatch",
             "batchID": str(batch_id),
             "currentOwner": str(owner),
-            "type": str(product_type),
+            "type": str(product_type).upper(),
             "constituents": json_constituents
         }
 
         if str(region) == 'Rural':
             response = requests.post('http://'+ RURAL + '/api/CreateBatch', json.dumps(json_data), headers=self.headers)
-            
         else:
-            resp_urban = requests.post('http://'+ URBAN + '/api/CreateBatch', json.dumps(json_data), headers=self.headers)
-            response = json.loads(resp_urban.content)
+            response = requests.post('http://'+ URBAN + '/api/CreateBatch', json.dumps(json_data), headers=self.headers)
 
         result = json.loads(response.content)
         if response.status_code != 200:
@@ -79,7 +111,7 @@ class TransferBatch():
         json_data = {
             "$class": "org.example.productchain.TransferBatch",
             "newOwner": str(owner),
-            "type": str(product_type),
+            "type": str(product_type).upper(),
             "region": str(region).upper(),
             "batch": "resource:org.example.productchain.Batch#" + str(batch_id)
         }
@@ -113,12 +145,11 @@ class QueryBatch():
 
     def query(self, batch_id):
 
-        story = []
-        transfers = self.get_transfers(batch_id)
         create = self.get_create(batch_id)
+        transfers = self.get_transfers(batch_id)
 
+        story = create
         story.extend(transfers)
-        story.extend(create)
         queue = [create]
 
         while len(queue) > 0:
@@ -139,7 +170,7 @@ class QueryBatch():
 
 
         story.sort(key=self.extract_time, reverse=True)
-        return story
+        return json.dumps(story, indent=4, sort_keys=True)
 
 
 
@@ -152,9 +183,10 @@ class QueryBatch():
         parsed_rural = json.loads(resp_rural.content)
         parsed_urban = json.loads(resp_urban.content)
 
-
+        result = ''
         if resp_rural.status_code == 200 and resp_urban.status_code == 200:
-            result = parsed_rural.extend(parsed_urban)
+            parsed_rural.extend(parsed_urban)
+            result = parsed_rural
         elif resp_rural.status_code == 200:
             result = parsed_rural
         elif resp_urban.status_code == 200:
@@ -162,8 +194,9 @@ class QueryBatch():
         else:
             result = []
 
-        print(json.dumps(parsed_rural, indent=4, sort_keys=True))
-        print(json.dumps(parsed_urban, indent=4, sort_keys=True))
+        #print(json.dumps(parsed_rural, indent=4, sort_keys=True))
+        #print(json.dumps(parsed_urban, indent=4, sort_keys=True))
+        print(result)
         
         return result
 
@@ -179,8 +212,10 @@ class QueryBatch():
         parsed_urban = json.loads(resp_urban.content)
 
 
+        result = ''
         if resp_rural.status_code == 200 and resp_urban.status_code == 200:
-            result = parsed_rural.extend(parsed_urban)
+            parsed_rural.extend(parsed_urban)
+            result = parsed_rural
         elif resp_rural.status_code == 200:
             result = parsed_rural
         elif resp_urban.status_code == 200:
@@ -188,8 +223,9 @@ class QueryBatch():
         else:
             result = []
 
-        print(json.dumps(parsed_rural, indent=4, sort_keys=True))
-        print(json.dumps(parsed_urban, indent=4, sort_keys=True))
+        #print(json.dumps(parsed_rural, indent=4, sort_keys=True))
+        #print(json.dumps(parsed_urban, indent=4, sort_keys=True))
+        print(result)
 
         return result
 

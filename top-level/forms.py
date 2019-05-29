@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DecimalField
 from wtforms.validators import DataRequired
 
 class CreateForm(FlaskForm):
@@ -16,7 +16,7 @@ class CreateForm(FlaskForm):
 
 
 class TransferForm(FlaskForm):
-    regions = ['Rural', 'Urban']
+    regions = [('Rural', 'rural'), ('Urban', 'urban')]
     batch_id = StringField('Batch ID', validators=[DataRequired()])
     region = SelectField(u'Region', choices = regions, validators = [DataRequired()])
     owner = StringField('New Owner', validators=[DataRequired()])
@@ -31,3 +31,11 @@ class StoryQueryForm(FlaskForm):
     batch_id = StringField('Batch ID', validators=[DataRequired()])
 
     submit = SubmitField('Query')
+
+
+class CreateHACCPForm(FlaskForm):
+    product_type = StringField('Product Type', validators=[DataRequired()])
+    min_temperature = DecimalField('Min temperature', validators=[DataRequired()])
+    max_temperature = DecimalField('Max temperature', validators=[DataRequired()])
+
+    submit = SubmitField('Create')

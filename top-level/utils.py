@@ -3,8 +3,9 @@ import requests
 import time
 import urllib
 
-RURAL = 'localhost:3000'
-URBAN = 'localhost:3000'
+# Two region servers
+RURAL = 'ec2-52-65-227-151.ap-southeast-2.compute.amazonaws.com:3000'
+URBAN = 'ec2-13-238-161-98.ap-southeast-2.compute.amazonaws.com:3000'
 
 class Setup():
 
@@ -20,10 +21,13 @@ class Setup():
             "$class": "org.example.productchain.Setup",
             "region": "URBAN"
         }
+
+        print("Starting req")
         
         resp_rural = requests.post('http://'+ RURAL + '/api/Setup', json.dumps(server_rural), headers=self.headers)
         resp_urban = requests.post('http://'+ URBAN + '/api/Setup', json.dumps(server_urban), headers=self.headers)
 
+        print("Ended req")
 
         return (resp_rural.status_code == 200 and resp_urban.status_code == 200)
 
@@ -99,7 +103,7 @@ class TransferBatch():
         resp_rural = requests.post('http://'+ RURAL + '/api/TransferBatch', json.dumps(json_data), headers=self.headers)
         resp_urban = requests.post('http://'+ URBAN + '/api/TransferBatch', json.dumps(json_data), headers=self.headers)
 
-        return (resp_rural.status_code == 200 or server_urban.status_code == 200)
+        return (resp_rural.status_code == 200 or resp_urban.status_code == 200)
 
 
 

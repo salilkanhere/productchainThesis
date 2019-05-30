@@ -153,11 +153,23 @@ class QueryBatch():
 
         result = ''
         if resp_rural.status_code == 200 and resp_urban.status_code == 200:
+            for a in parsed_rural:
+                a["region"] = "Rural"
+            
+            for a in parsed_urban:
+                a["region"] = "Urban"
+            
             parsed_rural.extend(parsed_urban)
             result = parsed_rural
         elif resp_rural.status_code == 200:
+            for a in parsed_rural:
+                a["region"] = "Rural"
+
             result = parsed_rural
         elif resp_urban.status_code == 200:
+            for a in parsed_urban:
+                a["region"] = "Urban"
+            
             result = parsed_urban
         else:
             result = []
@@ -178,11 +190,24 @@ class QueryBatch():
 
         result = ''
         if resp_rural.status_code == 200 and resp_urban.status_code == 200:
+            for a in parsed_rural:
+                a["region"] = "Rural"
+            
+            for a in parsed_urban:
+                a["region"] = "Urban"
+            
             parsed_rural.extend(parsed_urban)
             result = parsed_rural
+
         elif resp_rural.status_code == 200:
+            for a in parsed_rural:
+                a["region"] = "Rural"
+
             result = parsed_rural
         elif resp_urban.status_code == 200:
+            for a in parsed_urban:
+                a["region"] = "Urban"
+            
             result = parsed_urban
         else:
             result = []
@@ -209,6 +234,7 @@ class QueryBatch():
             transaction_id = curr["transactionId"]
             date = curr["timestamp"][:10]
             time = curr["timestamp"][12:19]
+            region = curr["region"]
             batch = ""
             constituents = []
             owner = ""
@@ -232,7 +258,8 @@ class QueryBatch():
                 "batch" : batch,
                 "owner" : owner,
                 "constituents" : constituents,
-                "transaction_id": transaction_id
+                "transaction_id": transaction_id,
+                "region": region
             }
 
             final.append(obj)

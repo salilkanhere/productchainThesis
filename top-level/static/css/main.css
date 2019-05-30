@@ -79,10 +79,10 @@ h3 {
   text-decoration: none;
 }
 div.transaction_heading {
-  text-align: right !important;
-  display: inline !important;
+  text-align: left;
+  display: inline;
 }
 div.transaction_time {
-  text-align: left;
+  text-align: right;
   display: inline;
 }

@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from config import Config, SetupStatus
-from forms import CreateForm, TransferForm, StoryQueryForm, CreateHACCPForm
-from utils import Setup, CreateBatch, TransferBatch, QueryBatch, CreateHACCP
+from forms import CreateForm, TransferForm, StoryQueryForm, CreateHACCPForm, QueryTempForm
+from utils import Setup, CreateBatch, TransferBatch, QueryBatch, CreateHACCP, QueryTemp
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -29,6 +29,10 @@ def create_batch():
     if form.validate_on_submit():
         createBatch = CreateBatch()
         response = createBatch.create(form.batch_id.data, form.owner.data, form.product_type.data, form.region.data, form.constituents.data)
+        if response:
+            response = "Create Batch transaction successfully submitted"
+        else:
+            response = "Failed to submit transaction. Ensure batch does not yet exist and the HACCP exists for the product type. Ensure all constituents are in the same region."
     else:
         response = "Please fill in all fields"
 
@@ -43,10 +47,30 @@ def create_HACCP():
     if form.validate_on_submit():
         createHACCP = CreateHACCP()
         response = createHACCP.create(form.product_type.data, form.min_temperature.data, form.max_temperature.data)
+        if response:
+            response = "Create HACCP transaction successfully submitted"
+        else:
+            response = "Failed to submit transaction. Ensure product type is either 'MEAT' or 'MILK'"
     else:
         response = "Please fill in all fields"
 
     return render_template('create_HACCP.html', title='Create HACCP', form=form, response=response)
+
+@app.route('/query_temperature/', methods=['GET', 'POST'])
+def query_temperature():
+    response = ''
+    form = QueryTempForm()
+
+    print form.validate_on_submit()
+    if form.validate_on_submit():
+        queryTemp = QueryTemp()
+        response = queryTemp.query(form.batch_id.data)
+        if not response:
+            response = "Query failed. Ensure batch exists."
+    else:
+        response = "Please fill in all fields"
+
+    return render_template('query_temperature.html', title='Query Temperature', form=form, response=response)
 
 
 
@@ -57,6 +81,10 @@ def transfer_batch():
     if form.validate_on_submit():
         transferBatch = TransferBatch()
         response = transferBatch.transfer(form.batch_id.data, form.owner.data, form.product_type.data, form.region.data)
+        if response:
+            response = "Create HACCP transaction successfully submitted"
+        else:
+            response = "Failed to submit transaction. Ensure the HACCP exists for the product type"
     else:
         response = "Please fill in all fields"
         
@@ -71,6 +99,9 @@ def product_story_query():
     if form.validate_on_submit():
         queryBatch = QueryBatch()
         response = queryBatch.query(form.batch_id.data)
+        if not response:
+            response = []
+            warn = "Batch does not exist."
     else:
         warn = "Please fill in all fields"
 

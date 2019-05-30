@@ -106,7 +106,104 @@ class TransferBatch():
         return (resp_rural.status_code == 200 or resp_urban.status_code == 200)
 
 
+class QueryTemp():
 
+    headers = {'content-type': 'application/json'}
+
+    def query(self, batch_id):
+
+        haccp = self.get_batch_HACCP(batch_id)
+
+        if not haccp:
+            return 0
+
+        json_filter = {"where":{"batch": "resource:org.example.productchain.Batch#" + str(batch_id)}}
+
+        resp_rural = requests.get('http://'+ RURAL + '/api/TemperatureReading?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        resp_urban = requests.get('http://'+ URBAN + '/api/TemperatureReading?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        
+        parsed_rural = json.loads(resp_rural.content)
+        parsed_urban = json.loads(resp_urban.content)
+
+        
+        temperatures = ''
+        if resp_rural.status_code == 200 and resp_urban.status_code == 200:
+            parsed_rural.extend(parsed_urban)
+            temperatures = parsed_rural
+        else:
+            return 0
+
+            print(temperatures)
+        return self.parse_temperatures(temperatures, haccp)
+
+
+    def get_batch_HACCP(self, batch_id):
+
+        #getting batch
+        json_filter = {"where":{"batchId": str(batch_id)}}
+
+        resp_rural = requests.get('http://'+ RURAL + '/api/Batch?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        resp_urban = requests.get('http://'+ URBAN + '/api/Batch?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        
+        parsed_rural = json.loads(resp_rural.content)
+        parsed_urban = json.loads(resp_urban.content)
+
+        product_type = ''
+        if resp_rural.status_code == 200 and len(parsed_rural) > 0:
+            product_type = parsed_rural[0]["type"]
+        elif resp_urban.status_code == 200 and len(parsed_urban) > 0:
+            product_type = parsed_urban[0]["type"]
+        else:
+            return 0
+
+        #getting HACCP
+        json_filter = {"where":{"type": product_type}}
+
+        resp_rural = requests.get('http://'+ RURAL + '/api/HACCP?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        resp_urban = requests.get('http://'+ URBAN + '/api/HACCP?filter=' + urllib.quote(json.dumps(json_filter)), headers=self.headers)
+        
+        parsed_rural = json.loads(resp_rural.content)
+        parsed_urban = json.loads(resp_urban.content)
+
+        haccp = ''
+        if resp_rural.status_code == 200 and len(parsed_rural) > 0:
+            haccp = parsed_rural[0]
+        elif resp_urban.status_code == 200 and len(parsed_urban) > 0:
+            haccp = parsed_urban[0]
+        else:
+            return 0
+
+        return haccp
+
+    def parse_temperatures(self, temperatures, haccp):
+        
+        response = {}
+        response["all_temp"] = []
+        response["violating_temp"] = []
+
+        print(temperatures)
+        temperatures.sort(key=self.extract_time, reverse=True)
+
+        for curr in temperatures:
+            temp = {
+                "date" : curr["timestamp"][:10],
+                "time" : curr["timestamp"][12:19],
+                "temp" : str(curr["centigrade"])
+            }
+            if curr["centigrade"] < haccp["minTemperature"] or curr["centigrade"] > haccp["maxTemperature"]:
+                response["violating_temp"].append(temp)
+
+            response["all_temp"].append(temp)
+
+        return response
+
+
+    def extract_time(self, json):
+        try:
+            numberjson = filter(lambda x: x.isdigit(), json['timestamp'])
+            return int(numberjson)
+        except KeyError:
+            return 0
 
 class QueryBatch():
     

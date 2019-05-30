@@ -77,4 +77,4 @@ def product_story_query():
     return render_template('product_story_query.html', title='Query Batch', form=form, response=response, warn=warn)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)

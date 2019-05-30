@@ -26,6 +26,10 @@ class TransferForm(FlaskForm):
 
 
 
+class QueryTempForm(FlaskForm):
+    batch_id = StringField('Batch ID', validators=[DataRequired()])
+
+    submit = SubmitField('Query')
 
 class StoryQueryForm(FlaskForm):
     batch_id = StringField('Batch ID', validators=[DataRequired()])

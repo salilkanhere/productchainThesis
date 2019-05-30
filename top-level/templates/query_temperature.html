@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="home">
+        <h1>Temperature Query</h1>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.batch_id.label }}<br>
+                {{ form.batch_id(size=32) }}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>  
+        {% if warn %}
+            <p>{{ warn }}</p>
+        {% endif %}   
+        {% if response %}
+            <div class="response">
+            <h1>Response</h1>
+        
+            <div class="transaction">
+            <h3>Violations</h3>
+            {% for temp in response.violating_temp %}
+                <p><b>{{ temp.date }} - {{ temp.time }}</b> [{{ temp.temp }} degrees centigrade]</p>
+            {% endfor %}
+            </div>
+
+            <div class="transaction">
+            <h3>All temperatures</h3>
+            {% for temp in response.all_temp %}
+                <p><b>{{ temp.date }} - {{ temp.time }}</b> [{{ temp.temp }} degrees centigrade]</p>
+            {% endfor %}
+            </div>
+
+            </div>
+        {% endif %}
+
+  </div>
+{% endblock %}

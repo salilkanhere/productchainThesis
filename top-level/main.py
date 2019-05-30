@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from config import Config, SetupStatus
-from forms import CreateForm, TransferForm, StoryQueryForm, CreateHACCPForm
-from utils import Setup, CreateBatch, TransferBatch, QueryBatch, CreateHACCP
+from forms import CreateForm, TransferForm, StoryQueryForm, CreateHACCPForm, QueryTempForm
+from utils import Setup, CreateBatch, TransferBatch, QueryBatch, CreateHACCP, QueryTemp
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -55,6 +55,22 @@ def create_HACCP():
         response = "Please fill in all fields"
 
     return render_template('create_HACCP.html', title='Create HACCP', form=form, response=response)
+
+@app.route('/query_temperature/', methods=['GET', 'POST'])
+def query_temperature():
+    response = ''
+    form = QueryTempForm()
+
+    print form.validate_on_submit()
+    if form.validate_on_submit():
+        queryTemp = QueryTemp()
+        response = queryTemp.query(form.batch_id.data)
+        if not response:
+            response = "Query failed. Ensure batch exists."
+    else:
+        response = "Please fill in all fields"
+
+    return render_template('query_temperature.html', title='Query Temperature', form=form, response=response)
 
 
 

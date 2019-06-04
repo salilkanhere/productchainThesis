@@ -3,6 +3,9 @@ body {
   padding: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #444;
+  height: 100%;
+  bottom: 0;
+  top: 0;
 }
 /*
  * Formatting the header area
@@ -35,12 +38,13 @@ div.response {
 }
 
 .container {
+  height: 100%;
   width: 1200px;
   margin: 0 auto;
 }
 div.home {
-  padding: 40px;
-  background-color: #E6E6FA;
+  height: 100%;
+  background-color: #ececec;
   -webkit-border-radius: 6px;
      -moz-border-radius: 6px;
           border-radius: 6px;
@@ -49,6 +53,10 @@ div.transaction {
   background: white;
   padding: 20px;
   margin: 20px;
+}
+h1 {
+  text-align: center;
+  padding-bottom: 40px;
 }
 h2 {
   font-size: 3em;
@@ -85,4 +93,57 @@ div.transaction_heading {
 div.transaction_time {
   text-align: right;
   display: inline;
+}
+
+.btn {
+  margin-top: 30px !important;
+  background-color: orange !important;
+  border-color: orange !important;
+  height: 50px !important;
+}
+
+.navbar-nav {
+  float: right !important;
+}
+
+
+.navbar-default .navbar-nav>li>a {
+  color: #fff;
+  font-weight: 600;
+}
+
+.navbar-default {
+  background-color: orange;
+  border-color: #ffffff;
+}
+
+
+a.navbar-brand {
+  color: white !important;
+  font-weight: 600;
+}
+
+img {
+  height: 50px;
+  display: inline;
+  float: left;
+  margin-right: 15px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%
+}
+div.form {
+  padding: 60px;
+}
+div.response {
+  padding: 40px;
+  background: #d0d0d0;
+  padding-top: 20px;
+}
+
+.form-control {
+  height: 50px !important;
 }

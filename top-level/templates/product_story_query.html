@@ -1,47 +1,48 @@
 {% extends "layout.html" %}
 {% block content %}
   <div class="home">
-        <h1>Product Story Query</h1>
-        <form action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
-            <p>
-                {{ form.batch_id.label }}<br>
-                {{ form.batch_id(size=32) }}
-            </p>
-            <p>{{ form.submit() }}</p>
-        </form>  
-        {% if warn %}
-            <p>{{ warn }}</p>
-        {% endif %}   
-        {% if response %}
-            <div class="response">
-            <h1>Response</h1>
-        
-            {% for transaction in response %}
+        <div class="form">
+            <h1>Product Story Query</h1>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.batch_id.label }}<br>
+                    {{ form.batch_id(size=32, class='form-control', placeholder="Batch ID") }}
+                </p>
+                <p>{{ form.submit(class='btn btn-primary btn-block') }}</p>
+            </form>  
+            {% if warn %}
+                <p>{{ warn }}</p>
+            {% endif %}   
+        </div>
+            {% if response %}
+                <div class="response">
+                <h1>Response</h1>
+            
+                {% for transaction in response %}
 
-                <div class="transaction">
-                    <h3 style="margin-top: 10px;">
-                        <div class="transaction_heading" style="text-align:left;display:inline;float:left;width:505px"><b>{{ transaction.region }} - {{ transaction.transaction_type }}</b></div>
-                        <div class="transaction_time" style="text-align:right;display:inline;float:right;width:505px">{{ transaction.time }} <b>{{ transaction.date }}</b></div>
-                    </h3>
-                    <br>
-                    <br>
-                    <p style="margin:2px"><b >Batch:</b> {{ transaction.batch }}</p>
-                    <p style="margin:2px"><b>Owner:</b> {{ transaction.owner }}</p>
-                    {% if transaction.constituents != 0 %}
-                        <p style="margin:2px"><b>Constituents:</b>
-                        {% for constituent in transaction.constituents %}
-                            {{ constituent }} 
-                        {% endfor %}
-                        </p>
-                    {% endif%}
-                    <p style="margin:2px"><b>Transaction ID:</b> {{ transaction.transaction_id }}</p>
+                    <div class="transaction">
+                        <h3 style="margin-top: 10px;">
+                            <div class="transaction_heading" style="text-align:left;display:inline;float:left;width:505px"><b>{{ transaction.region }} - {{ transaction.transaction_type }}</b></div>
+                            <div class="transaction_time" style="text-align:right;display:inline;float:right;width:505px">{{ transaction.time }} <b>{{ transaction.date }}</b></div>
+                        </h3>
+                        <br>
+                        <br>
+                        <p style="margin:2px"><b >Batch:</b> {{ transaction.batch }}</p>
+                        <p style="margin:2px"><b>Owner:</b> {{ transaction.owner }}</p>
+                        {% if transaction.constituents != 0 %}
+                            <p style="margin:2px"><b>Constituents:</b>
+                            {% for constituent in transaction.constituents %}
+                                {{ constituent }} 
+                            {% endfor %}
+                            </p>
+                        {% endif%}
+                        <p style="margin:2px"><b>Transaction ID:</b> {{ transaction.transaction_id }}</p>
+                    </div>
+
+            {% endfor %}
+
                 </div>
-
-           {% endfor %}
-
-            </div>
-        {% endif %}
-
+            {% endif %}
   </div>
 {% endblock %}

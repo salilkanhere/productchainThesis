@@ -8,19 +8,24 @@
   </head>
   <body>
     <header>
-      <div class="container">
-        <h1 class="logo">ProductChain</h1>
-        <strong><nav>
-          <ul class="menu">
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('create_batch') }}">Create Batch</a></li>
-            <li><a href="{{ url_for('create_HACCP') }}">Create HACCP</a></li>
-            <li><a href="{{ url_for('transfer_batch') }}">Transfer Batch</a></li>
-            <li><a href="{{ url_for('product_story_query') }}">Query Product Story</a></li>
-            <li><a href="{{ url_for('query_temperature') }}">Query Temperature</a></li>
-          </ul>
-        </nav></strong>
-      </div>
+
+        <nav class="navbar navbar-default sticky">
+            <div class="container-fluid">
+              <img src="/static/images/Productchain_logo.png">
+              <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for('home') }}">ProductChain</a>
+              </div>
+              <ul class="nav navbar-nav">
+                  <li><a href="{{ url_for('home') }}">Home</a></li>
+                  <li><a href="{{ url_for('create_batch') }}">Create Batch</a></li>
+                  <li><a href="{{ url_for('create_HACCP') }}">Create HACCP</a></li>
+                  <li><a href="{{ url_for('transfer_batch') }}">Transfer Batch</a></li>
+                  <li><a href="{{ url_for('product_story_query') }}">Query Product Story</a></li>
+                  <li><a href="{{ url_for('query_temperature') }}">Query Temperature</a></li>
+              </ul>
+            </div>
+          </nav>          
+
     </header>
     <div class="container">
       {% block content %}

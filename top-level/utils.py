@@ -121,7 +121,7 @@ class QueryTemp():
         wrapper = self.wrapper(self.query, batch_id)
 
         print("~~~~~~~~~~~ TIMING RESULTS ~~~~~~~~~~~")
-        print(timeit.timeit(wrapper, number=50))
+        print(timeit.timeit(wrapper, number=5))
         print("~~~~~~~~~ END TIMING RESULTS ~~~~~~~~~")
         
         return 0
@@ -235,7 +235,7 @@ class QueryBatch():
         wrapper = self.wrapper(self.query, batch_id)
 
         print("~~~~~~~~~~~ TIMING RESULTS ~~~~~~~~~~~")
-        print(timeit.timeit(wrapper, number=1))
+        print(timeit.timeit(wrapper, number=5))
         print("~~~~~~~~~ END TIMING RESULTS ~~~~~~~~~")
         
         return 0

@@ -6,6 +6,7 @@
 *.txt
 *_sk
 *bna
+*.pyc
 
 fabric-samples/first-network/connection/connection.json
 

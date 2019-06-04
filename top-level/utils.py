@@ -2,6 +2,7 @@ import json
 import requests
 import time
 import urllib
+import timeit
 
 # Two region servers
 RURAL = 'ec2-52-65-227-151.ap-southeast-2.compute.amazonaws.com:3000'
@@ -110,6 +111,21 @@ class QueryTemp():
 
     headers = {'content-type': 'application/json'}
 
+    def wrapper(self, func, *args, **kwargs):
+        def wrapped():
+            return func(*args, **kwargs)
+        return wrapped
+
+    def test(self, batch_id):
+
+        wrapper = self.wrapper(self.query, batch_id)
+
+        print("~~~~~~~~~~~ TIMING RESULTS ~~~~~~~~~~~")
+        print(timeit.timeit(wrapper, number=50))
+        print("~~~~~~~~~ END TIMING RESULTS ~~~~~~~~~")
+        
+        return 0
+
     def query(self, batch_id):
 
         haccp = self.get_batch_HACCP(batch_id)
@@ -133,7 +149,6 @@ class QueryTemp():
         else:
             return 0
 
-            print(temperatures)
         return self.parse_temperatures(temperatures, haccp)
 
 
@@ -181,7 +196,6 @@ class QueryTemp():
         response["all_temp"] = []
         response["violating_temp"] = []
 
-        print(temperatures)
         temperatures.sort(key=self.extract_time, reverse=True)
 
         for curr in temperatures:
@@ -205,34 +219,51 @@ class QueryTemp():
         except KeyError:
             return 0
 
+
+
 class QueryBatch():
     
     headers = {'content-type': 'application/json'}
+
+    def wrapper(self, func, *args, **kwargs):
+        def wrapped():
+            return func(*args, **kwargs)
+        return wrapped
+
+    def test(self, batch_id):
+
+        wrapper = self.wrapper(self.query, batch_id)
+
+        print("~~~~~~~~~~~ TIMING RESULTS ~~~~~~~~~~~")
+        print(timeit.timeit(wrapper, number=1))
+        print("~~~~~~~~~ END TIMING RESULTS ~~~~~~~~~")
+        
+        return 0
 
     def query(self, batch_id):
 
         create = self.get_create(batch_id)
         transfers = self.get_transfers(batch_id)
 
-        story = create
+        story = list(create)
         story.extend(transfers)
-        queue = [create]
-
+        queue = list(create)
+        
         while len(queue) > 0:
             curr = queue.pop(0)
 
-            for a in curr:
-            
-                if 'constituents' in a:
-                    for i in a['constituents']:
+            if 'constituents' in curr:
+                for i in curr['constituents']:
 
-                        transfers = self.get_transfers(i[-1])
-                        create = self.get_create(i[-1])
 
-                        story.extend(transfers)
-                        story.extend(create)
+                    transfers = self.get_transfers(i.split('#')[1])
+                    create = self.get_create(i.split('#')[1])
 
-                        queue.append(create)
+                    story.extend(transfers)
+                    story.extend(create)
+
+                    queue.extend(create)
+
 
 
         return self.format_story(story)
@@ -343,7 +374,7 @@ class QueryBatch():
             elif transaction_type == "CreateBatch":
                 batch = curr["batchID"]
                 for val in curr["constituents"]:
-                    constituents.append(val[-1])
+                    constituents.append(val.split('#')[1])
                 owner = curr["currentOwner"]
 
 

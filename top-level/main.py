@@ -64,6 +64,8 @@ def query_temperature():
     print form.validate_on_submit()
     if form.validate_on_submit():
         queryTemp = QueryTemp()
+        
+        queryTemp.test(form.batch_id.data)
         response = queryTemp.query(form.batch_id.data)
         if not response:
             response = "Query failed. Ensure batch exists."
@@ -98,6 +100,9 @@ def product_story_query():
     form = StoryQueryForm()
     if form.validate_on_submit():
         queryBatch = QueryBatch()
+
+        queryBatch.test(form.batch_id.data)
+
         response = queryBatch.query(form.batch_id.data)
         if not response:
             response = []

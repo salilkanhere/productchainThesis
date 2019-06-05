@@ -59,6 +59,9 @@ class CreateBatch():
 
     def create(self, batch_id, owner, product_type, region, constituents):
 
+        if self.batch_exists(batch_id):
+            return 0
+
         json_constituents = []
         
         if len(constituents) > 0:
@@ -84,6 +87,14 @@ class CreateBatch():
         return (response.status_code == 200)
 
 
+    def batch_exists(self, batch_id):
+
+        resp_rural = requests.get('http://'+ RURAL + '/api/Batch/' + str(batch_id), headers=self.headers)
+        resp_urban = requests.get('http://'+ URBAN + '/api/Batch/' + str(batch_id), headers=self.headers)
+
+        return (resp_rural.status_code == 200 or resp_urban.status_code == 200)
+
+
 
 
 
@@ -92,6 +103,9 @@ class TransferBatch():
     headers = {'content-type': 'application/json'}
 
     def transfer(self, batch_id, owner, product_type, region):
+
+        if not self.batch_exists(batch_id):
+            return 0
 
         json_data = {
             "$class": "org.example.productchain.TransferBatch",
@@ -103,6 +117,14 @@ class TransferBatch():
 
         resp_rural = requests.post('http://'+ RURAL + '/api/TransferBatch', json.dumps(json_data), headers=self.headers)
         resp_urban = requests.post('http://'+ URBAN + '/api/TransferBatch', json.dumps(json_data), headers=self.headers)
+
+        return (resp_rural.status_code == 200 or resp_urban.status_code == 200)
+
+
+    def batch_exists(self, batch_id):
+
+        resp_rural = requests.get('http://'+ RURAL + '/api/Batch/' + str(batch_id), headers=self.headers)
+        resp_urban = requests.get('http://'+ URBAN + '/api/Batch/' + str(batch_id), headers=self.headers)
 
         return (resp_rural.status_code == 200 or resp_urban.status_code == 200)
 
@@ -127,6 +149,9 @@ class QueryTemp():
         return 0
 
     def query(self, batch_id):
+
+        if not self.batch_exists(batch_id):
+            return 0
 
         haccp = self.get_batch_HACCP(batch_id)
 
@@ -218,6 +243,13 @@ class QueryTemp():
             return int(numberjson)
         except KeyError:
             return 0
+    
+    def batch_exists(self, batch_id):
+
+        resp_rural = requests.get('http://'+ RURAL + '/api/Batch/' + str(batch_id), headers=self.headers)
+        resp_urban = requests.get('http://'+ URBAN + '/api/Batch/' + str(batch_id), headers=self.headers)
+
+        return (resp_rural.status_code == 200 or resp_urban.status_code == 200)
 
 
 

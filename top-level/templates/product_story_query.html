@@ -12,7 +12,9 @@
                 <p>{{ form.submit(class='btn btn-primary btn-block') }}</p>
             </form>  
             {% if warn %}
-                <p>{{ warn }}</p>
+                <div class="warn">
+                    <p>{{ warn }}</p>
+                </div>
             {% endif %}   
         </div>
             {% if response %}

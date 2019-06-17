@@ -14,6 +14,9 @@ The application is fairly simple and features 5 different forms - one for each o
 ## Code Structure
 
 The main pages and behaviours are defined in *main.py*
+
 The specific form stuctures are defined in *forms.py*
+
 The behaviour of each form is defined in *utils.py*
+
 The HTML elements are defined in *templates/*
